@@ -1,0 +1,17 @@
+[Unit]
+Description=Job Fetcher - Automated Job Search Engine
+After=network.target
+
+[Service]
+Type=simple
+User=jobfetcher
+WorkingDirectory=/opt/job-fetcher
+ExecStart=/opt/job-fetcher/venv/bin/python main.py --scheduler
+Restart=always
+RestartSec=30
+StandardOutput=append:/var/log/job-fetcher/job_fetcher.log
+StandardError=append:/var/log/job-fetcher/job_fetcher.log
+EnvironmentFile=/opt/job-fetcher/.env
+
+[Install]
+WantedBy=multi-user.target

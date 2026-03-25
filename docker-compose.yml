@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  job-fetcher:
+    build: .
+    container_name: job-fetcher
+    hostname: job-fetcher
+    
+    # Environment variables - load from .env file
+    env_file:
+      - .env
+    
+    # Volumes for persistent data
+    volumes:
+      # Mount local directory for seen.json and logs
+      - ./data:/app/data
+      - ./seen.json:/app/seen.json
+      - ./job_fetcher.log:/app/job_fetcher.log
+    
+    # Always restart if it crashes
+    restart: unless-stopped
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; exit(0 if os.path.exists('seen.json') else 1)"]
+      interval: 5m
+      timeout: 10s
+      retries: 2
+      start_period: 30s

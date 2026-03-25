@@ -1,0 +1,18 @@
+services:
+  - type: worker
+    name: job-fetcher
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scheduler.py
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+      - key: JSEARCH_API_KEY
+      - key: ADZUNA_APP_ID
+      - key: ADZUNA_APP_KEY
+      - key: TELEGRAM_BOT_TOKEN
+      - key: TELEGRAM_CHAT_ID
+      - key: SCHEDULER_INTERVAL_HOURS
+        value: "24"
