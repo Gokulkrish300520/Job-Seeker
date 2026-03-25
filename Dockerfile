@@ -22,9 +22,6 @@ COPY main.py .
 COPY scheduler.py .
 COPY requirements.txt .
 
-# Create volume for persistent data (seen.json, logs)
-VOLUME ["/app/data"]
-
 # Set environment to production
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
