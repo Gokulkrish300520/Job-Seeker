@@ -7,7 +7,7 @@ import logging
 import time
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
 from main import get_all_jobs, notify_jobs_via_telegram
 from config import SCHEDULER_INTERVAL_HOURS
 
@@ -59,18 +59,19 @@ def start_scheduler(interval_hours=None):
     
     scheduler = BackgroundScheduler()
     
-    # Add the job
+    # Add the job to run daily at 11:30 AM
     scheduler.add_job(
         scheduled_job_fetch,
-        trigger=IntervalTrigger(hours=interval_hours),
+        trigger=CronTrigger(hour=11, minute=30),
         id='job_fetcher',
         name='Job Fetcher',
-        replace_existing=True
+        replace_existing=True,
+        next_run_time=datetime.now()
     )
     
     # Start the scheduler
     scheduler.start()
-    logger.info(f"🚀 Job scheduler started - jobs will be fetched every {interval_hours} hours")
+    logger.info(f"🚀 Job scheduler started - jobs will be fetched daily at 11:00 AM")
     logger.info(f"First fetch scheduled at: {scheduler.get_job('job_fetcher').next_run_time}")
     
     return scheduler
